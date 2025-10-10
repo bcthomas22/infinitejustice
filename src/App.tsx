@@ -9,7 +9,7 @@ function App() {
   useEffect(()=>{
     const fetchCount = async () => {
       const { data } = await supabase
-        .from('Simple Counter')
+        .from('counter')
         .select('count')
         .eq('id', 1)
         .single()
@@ -24,7 +24,7 @@ function App() {
 
     // Update the counter in the database
     const {} = await supabase
-      .from('Simple Counter')
+      .from('counter')
       .update({ count: newCount })
       .eq('id', 1)
   }

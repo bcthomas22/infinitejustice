@@ -8,11 +8,12 @@ function App() {
 
   useEffect(()=>{
     const fetchCount = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('counter')
         .select('count')
         .eq('id', 1)
         .single()
+      if (error) console.error('Supabase fetch error:', error)
       if (data) setCount(data.count)
     }
     fetchCount()

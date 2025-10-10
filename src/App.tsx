@@ -5,6 +5,7 @@ import './App.css'
 function App() {
 
   const [count, setCount] = useState<number | null>(null);
+  const [isPosting, setIsPosting] = useState<boolean>(false);
 
   useEffect(()=>{ //Get data
     const fetchCount = async () => {
@@ -44,6 +45,8 @@ function App() {
 
     if(count === null) return;
 
+    setIsPosting(true);
+
     const newCount = count + 1
     setCount(newCount)
 
@@ -51,6 +54,8 @@ function App() {
       .from('counter')
       .update({ count: newCount })
       .eq('id', 1)
+
+    setTimeout(() => setIsPosting(false), 100);
   }
 
   return (
@@ -61,6 +66,7 @@ function App() {
 
       <button
         onClick={increment}
+        disabled={isPosting}
       >
         Click Me
       </button>

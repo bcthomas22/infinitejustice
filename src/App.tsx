@@ -4,9 +4,9 @@ import './App.css'
 
 function App() {
 
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState<number | null>(null);
 
-  useEffect(()=>{
+  useEffect(()=>{ //Get data
     const fetchCount = async () => {
       const { data, error } = await supabase
         .from('counter')
@@ -19,11 +19,34 @@ function App() {
     fetchCount()
   }, [])
 
+  useEffect(() => { //Realtime effects
+  const channel = supabase
+    .channel('counter-updates')
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'counter',
+        filter: 'id=eq.1'
+      },
+      (payload: any) => {
+        setCount(payload.new.count)
+      }
+    )
+    .subscribe()
+  return () => {
+    supabase.removeChannel(channel)
+  }
+}, [])
+
   const increment = async () => {
+
+    if(count === null) return;
+
     const newCount = count + 1
     setCount(newCount)
 
-    // Update the counter in the database
     const {} = await supabase
       .from('counter')
       .update({ count: newCount })
@@ -41,8 +64,6 @@ function App() {
       >
         Global Counter: {count}
       </button>
-
-
     </>
   )
 }

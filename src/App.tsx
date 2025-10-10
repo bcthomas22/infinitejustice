@@ -56,13 +56,13 @@ function App() {
   return (
     <>
       <h1>
-        Infinite Justice
+        {count}
       </h1>
 
       <button
         onClick={increment}
       >
-        Global Counter: {count}
+        Click Me
       </button>
     </>
   )

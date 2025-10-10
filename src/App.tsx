@@ -60,6 +60,10 @@ function App() {
 
   return (
     <>
+      <h2>
+        Shmack Counter
+      </h2>
+      
       <h1>
         {count}
       </h1>
@@ -68,7 +72,7 @@ function App() {
         onClick={increment}
         disabled={isPosting}
       >
-        Click Me
+        SHMACK
       </button>
     </>
   )

@@ -22,17 +22,56 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #242424;
+  padding: 0.5em 0.5em;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.counter {
+  margin-top: 25vh;
+  display: flex;
+  flex-direction: column;
   place-items: center;
-  min-width: 320px;
   min-height: 100vh;
 }
 
+.header-title {
+  margin: 0;
+  font-size: 1.25em;
+  font-weight: 600;
+  text-align: center;
+  flex: 1;
+  color: #fff;
+}
+
+.header-btn {
+  background: none;
+  border: none;
+  margin: 0;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
 h1 {
-  font-size: 3.2em;
+  font-size: 5em;
   line-height: 1.1;
+  margin: 2vh;
+}
+
+h2 {
+  margin: 1vh;
 }
 
 button {
@@ -45,6 +84,7 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  margin: 1vh;
 }
 button:hover {
   border-color: #646cff;
@@ -54,15 +94,53 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -100vw; 
+  width: 300px;
+  height: 100%;
+  background-color: #242424;
+  color: #fff;
+  padding: 2em;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+  transition: right 0.3s ease;
+  z-index: 2000;
+}
+
+.sidebar.open {
+  position: fixed;
+  top: 0;
+  right: 0px; 
+  width: 300px;
+  height: 100%;
+  background-color: #242424;
+  color: #fff;
+  padding: 2em;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+  transition: right 0.3s ease;
+  z-index: 2000;
+}
+
+.sidebar-sect {
+  margin-top: 5vh;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2em;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.profile-text{
+  font-size: 35px;
+}
+
+.sign-out {
+  color: red;
 }

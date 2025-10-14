@@ -1,4 +1,4 @@
-import { use, useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { supabase } from "./supabaseClient";
 
 type ProfileProps = {
@@ -9,14 +9,26 @@ type ProfileProps = {
 export function Profie(props: ProfileProps) {
 
     const [username, setUsername] = useState<null | string>(null);
+    const [myCount, setMyCount] = useState<null | number>(null);
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchUserStats = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             setUsername(user?.user_metadata.username);
+            if (user) {
+                const { data } = await supabase
+                    .from("user_count")
+                    .select("count")
+                    .eq("user_id", user.id)
+                    .single();
+                
+                if(data) setMyCount(data.count);
+            }
         }
 
-        if(props.isOpen) fetchUser();
+        if(props.isOpen){
+            fetchUserStats();
+        }
     }, [props.isOpen])
 
     const handleLogout = async () => {
@@ -40,7 +52,7 @@ export function Profie(props: ProfileProps) {
 
             <div className="sidebar-sect">
                 <p>Shmacks:</p>
-                <h2>1234</h2>
+                <h2>{myCount}</h2>
             </div>
 
             <div className="sidebar-sect">

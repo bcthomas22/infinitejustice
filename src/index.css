@@ -79,6 +79,8 @@ input {
   border-radius: 10px;
   padding: 10px;
   border: none;
+  height: 30px;
+  width: 270px;
 }
 
 button {
@@ -150,13 +152,73 @@ button:focus-visible {
 
 .username-text {
   cursor: pointer;
+  background-color: #1a1a1a;
+  border-radius: 15px;
+  height: 50px;
+  align-content: center;
 }
 
 .username-text:hover {
   color: #535bf2;
-
 }
 
 .sign-out {
   color: red;
+}
+
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.leaderboard-cell {
+  margin: 10px;
+  position: relative;
+  padding: 30px;
+  background-color: #1a1a1a;
+  border-radius: 30px;
+  width: 30vw;
+}
+
+.rank {
+  position: absolute;
+  top: 0px;
+  right: 15px;
+}
+
+.lead-user {
+  margin-bottom: 20px;
+  font-size: min(6vw, 20px)
+}
+
+.lead-text {
+  margin: 0;
+}
+
+.lead-count {
+  font-size: min(8vw, 40px);
+  margin: 0;
+}
+
+.top-leaderboard-cell {
+  margin: 10px;
+  margin-top: 150px;
+  position: relative;
+  padding: 30px;
+  background-color: #1a1a1a;
+  border-radius: 30px;
+  width: 40vw;
+}
+
+.top-rank {
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  color: gold;
+}
+
+.top-lead-count {
+  font-size: min(10vw, 60px);
+  margin: 0;
 }

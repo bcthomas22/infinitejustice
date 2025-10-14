@@ -39,9 +39,21 @@ export function Counter() {
     }
   }, [])
 
+  const getUserCount = async (userId: string) => {
+    const { data } = await supabase
+      .from('user_count')
+      .select('count')
+      .eq('user_id', userId)
+      .single();
+    
+    return data ? data.count : 0;
+  }
+
   const increment = async () => {
 
-    if(count === null) return;
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if(count === null || user === null) return;
 
     setIsPosting(true);
 
@@ -52,6 +64,14 @@ export function Counter() {
       .from('counter')
       .update({ count: newCount })
       .eq('id', 1)
+
+    const {} = await supabase
+      .from('user_count')
+      .upsert({
+          user_id: user.id,
+          username: user.user_metadata.username,
+          count: (await getUserCount(user.id)) + 1
+      })
 
     setTimeout(() => setIsPosting(false), 100);
   }

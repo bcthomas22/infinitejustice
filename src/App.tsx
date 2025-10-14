@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import { Header } from "./Header.tsx";
 import { supabase } from "./supabaseClient";
 import { Login } from "./Login.tsx";
+import { Leaderboard } from './Leaderboard.tsx';
 
 function App() {
 
   const [user, setUser] = useState<any>(null);
+  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(( {data: { session } }) => {
@@ -39,8 +41,13 @@ function App() {
 
   return (
     <>
-      <Header />
-      <Counter />
+      <Header setShowLeaderboard={setShowLeaderboard}/>
+
+      {showLeaderboard ? (
+        <Leaderboard />
+      ) : (
+        <Counter />
+      )}
     </>
   )
 

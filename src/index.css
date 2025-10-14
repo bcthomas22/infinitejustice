@@ -74,6 +74,13 @@ h2 {
   margin: 1vh;
 }
 
+input {
+  font-size: 1em;
+  border-radius: 10px;
+  padding: 10px;
+  border: none;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -139,6 +146,15 @@ button:focus-visible {
 
 .profile-text{
   font-size: 35px;
+}
+
+.username-text {
+  cursor: pointer;
+}
+
+.username-text:hover {
+  color: #535bf2;
+
 }
 
 .sign-out {

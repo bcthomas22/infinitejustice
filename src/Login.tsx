@@ -25,11 +25,6 @@ export function Login() {
         const { error } = await supabase.auth.signUp({
            email,
            password,
-           options: {
-                data: {
-                    username: ("User " + Math.floor(Math.random() * 10000))
-                }
-           }
         })
 
         if (error) setError(error.message)

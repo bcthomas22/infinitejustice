@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { supabase } from "./supabaseClient";
 
 type ProfileProps = {
@@ -10,14 +10,18 @@ export function Profie(props: ProfileProps) {
 
     const [username, setUsername] = useState<null | string>(null);
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUsername(user?.user_metadata.username);
+        }
+
+        if(props.isOpen) fetchUser();
+    }, [props.isOpen])
+
     const handleLogout = async () => {
         await supabase.auth.signOut();
     };
-    
-    useEffect(() => {
-        const username: string = getUsername();
-        setUsername(username)
-    }, [])
 
     return (
         <div className={"sidebar" + (props.isOpen ? " open" : "")}>
@@ -31,7 +35,7 @@ export function Profie(props: ProfileProps) {
 
             <div className="sidebar-sect">
                 <p>Username:</p>
-                <h2>My Username</h2>
+                <Username username={username ?? ""} setUsername={setUsername}/>
             </div>
 
             <div className="sidebar-sect">
@@ -45,5 +49,40 @@ export function Profie(props: ProfileProps) {
                 </button>
             </div>
         </div>
+    )
+}
+
+type UsernameProps = {
+    username: string;
+    setUsername: Dispatch<SetStateAction<string | null>>
+}
+
+function Username(props: UsernameProps) {
+
+    const [changingUsername, setChangingUsername] = useState<boolean>(false);
+
+    const updateUsername = async () => {
+        await supabase.auth.updateUser({
+            data: { username: props.username},
+        });
+    }
+
+    return (
+        changingUsername ? (
+            <input
+                type="text"
+                value={props.username}
+                onChange={e => props.setUsername(e.target.value)}
+                onBlur={() => {
+                    setChangingUsername(false)
+                    updateUsername()
+                }}
+            />
+        ):(
+            <h2 
+                className="username-text"
+                onClick={() => setChangingUsername(true)}
+            >{props.username}</h2>
+        )
     )
 }

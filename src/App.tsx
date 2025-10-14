@@ -15,7 +15,19 @@ function App() {
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (event, session) => {
+        
+        if(event == "SIGNED_IN" && session?.user){
+          const user = session.user;
+          const hasUsername = user.user_metadata?.username;
+
+          if(!hasUsername){
+            await supabase.auth.updateUser({
+              data: { username: "User#" + Math.floor(Math.random() * 10000)},
+            });
+          }
+        }
+
         setUser(session?.user ?? null);
       }
     );

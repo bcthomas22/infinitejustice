@@ -34,7 +34,7 @@ export function Login() {
         await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: window.location.origin,
+                redirectTo: "https://bcthomas22.github.io/infinitejustice/",
             },
         });
     }

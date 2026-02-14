@@ -1,5 +1,5 @@
 import './App.css'
-import { General } from "./Counter.tsx";
+import { General } from "./General.tsx";
 import { Header } from "./Header.tsx";
 
 function App() {

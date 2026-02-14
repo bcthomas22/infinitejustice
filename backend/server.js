@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const doSomething = require("./routes/DoSomething");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -11,9 +12,7 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK" });
 });
 
-app.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello world" });
-});
+app.get("api/doSomething", doSomething);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -1,12 +1,12 @@
-import { Trophy, User } from "lucide-react";
+import { User } from "lucide-react";
 import { Profie } from "./Profile"; 
 import { useState } from "react";
 
 type HeaderProps = {
-    setShowLeaderboard: React.Dispatch<React.SetStateAction<boolean>>
+    //none yet
 }
 
-export function Header(props: HeaderProps) {
+export function Header(_props: HeaderProps) {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -16,11 +16,8 @@ export function Header(props: HeaderProps) {
     return (
         <>
             <header>
-                <button className="header-btn" onClick={() => props.setShowLeaderboard(true)}>
-                    <Trophy size={30} />
-                </button>
-                <button className="header-btn" onClick={() => props.setShowLeaderboard(false)}>
-                    Shmack Counter
+                <button className="header-btn" onClick={() => {}}>
+                    Infinite Justice
                 </button>
                 <button className="header-btn" onClick={toggleSidebar}>
                     <User size={30} />

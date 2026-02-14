@@ -1,97 +1,35 @@
-import { useState, useEffect } from 'react'
-import { supabase } from './supabaseClient'
+import { useEffect, useState } from 'react'
 
-export function Counter() {
-    const [count, setCount] = useState<number | null>(null);
-    const [isPosting, setIsPosting] = useState<boolean>(false);
+const API_BASE = import.meta.env.VITE_API_URL;
 
-  useEffect(()=>{ //Get data
-    const fetchCount = async () => {
-      const { data, error } = await supabase
-        .from('counter')
-        .select('count')
-        .eq('id', 1)
-        .single()
-      if (error) console.error('Supabase fetch error:', error)
-      if (data) setCount(data.count)
-    }
-    fetchCount()
-  }, [])
+export function General() {
 
-  useEffect(() => { //Realtime effects
-    const channel = supabase
-    .channel('counter-updates')
-    .on(
-      'postgres_changes',
-      {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'counter',
-        filter: 'id=eq.1'
-      },
-      (payload: any) => {
-        setCount(payload.new.count)
+  const [string, setString] = useState<string|null>(null);
+
+  const getSomething = async () => {
+      const res = await fetch(`${API_BASE}/api/doSomething`);
+
+      if(!res.ok){
+        throw new Error("Error with getting string");
       }
-    )
-    .subscribe()
-    return () => {
-      supabase.removeChannel(channel)
-    }
-  }, [])
 
-  const getUserCount = async (userId: string) => {
-    const { data } = await supabase
-      .from('user_count')
-      .select('count')
-      .eq('user_id', userId)
-      .single();
-    
-    return data ? data.count : 0;
-  }
-
-  const increment = async () => {
-
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if(count === null || user === null) return;
-
-    setIsPosting(true);
-
-    const newCount = count + 1
-    setCount(newCount)
-
-    const {} = await supabase
-      .from('counter')
-      .update({ count: newCount })
-      .eq('id', 1)
-
-    const {} = await supabase
-      .from('user_count')
-      .upsert({
-          user_id: user.id,
-          username: user.user_metadata.username,
-          count: (await getUserCount(user.id)) + 1
-      })
-
-    setTimeout(() => setIsPosting(false), 100);
+      const data = await res.json();
+      setString(data.value);
   }
 
   return (
     <div className='counter'>
-      <h2>
-        Shmack Counter
-      </h2>
-      
       <h1>
-        {count}
+        Infinite Justice
       </h1>
 
       <button
-        onClick={increment}
-        disabled={isPosting}
+        onClick={getSomething}
       >
-        SHMACK
+        Do Something
       </button>
+
+      <h2>{string}</h2>
     </div>
   )
 }

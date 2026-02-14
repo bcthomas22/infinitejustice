@@ -12,7 +12,7 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK" });
 });
 
-app.get("api/doSomething", doSomething);
+app.get("/api/doSomething", doSomething);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

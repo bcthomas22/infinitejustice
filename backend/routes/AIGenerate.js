@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const openai = require("../services/openai");
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
     try{
         const { prompt } = req.body
 
-        const responce = await openai.responces.create({
+        const response = await openai.responses.create({
             model: "gpt-4.1",
             input: prompt,
             response_format: {
@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
             }
         })
 
-        const output = responce.output_parsed;
+        const output = response.output_parsed;
         res.json(output);
 
     } catch (err) {

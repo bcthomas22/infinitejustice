@@ -37,7 +37,7 @@ export function General() {
 
     const data = await res.json()
     setInputString("");
-    setOutputString(data.responce);
+    setOutputString(data.response);
   }
 
   return (

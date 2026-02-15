@@ -28,7 +28,8 @@ router.post("/", async (req, res) => {
         res.json(output);
 
     } catch (err) {
-        res.status(500).json({ error: "OpenAI request failed" });
+        console.error("OPENAI ERROR:", err);
+        res.status(500).json({ error: err.message });
     }
 })
 

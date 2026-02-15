@@ -7,18 +7,20 @@ router.post("/", async (req, res) => {
         const { prompt } = req.body
 
         const response = await openai.responses.create({
-            model: "gpt-4.1",
+            model: "gpt-4.1-mini",
             input: prompt,
-            response_format: {
-                type: "json_schema",
-                json_schema: {
-                    name: "structured_response",
-                    schema: {
-                        type: "object",
-                        properties: {
-                            response: { type: "string" }
-                        },
-                        required: ["response"]
+            text: {
+                format: {
+                    type: "json_schema",
+                    json_schema: {
+                        name: "structured_response",
+                        schema: {
+                            type: "object",
+                            properties: {
+                                response: { type: "string" }
+                            },
+                            required: ["response"]
+                        }
                     }
                 }
             }

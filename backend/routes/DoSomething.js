@@ -11,7 +11,7 @@ const strings = [
 ]
 
 router.get("/", (req, res) => {
-  const randomString = strings[Math.floor(Math.random * strings.length)]
+  const randomString = strings[Math.floor(Math.random() * strings.length)]
   res.json({value: randomString});
 })
 

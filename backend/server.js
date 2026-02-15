@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const doSomething = require("./routes/DoSomething");
+const aiGenerate = require("./routes/AIGenerate");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -13,6 +14,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/doSomething", doSomething);
+app.use("/api/aiGenerate", aiGenerate);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

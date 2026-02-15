@@ -37,33 +37,6 @@ header {
   box-sizing: border-box;
 }
 
-.counter {
-  margin-top: 25vh;
-  display: flex;
-  flex-direction: column;
-  place-items: center;
-  min-height: 100vh;
-}
-
-.header-title {
-  margin: 0;
-  font-size: 1.25em;
-  font-weight: 600;
-  text-align: center;
-  flex: 1;
-  color: #fff;
-}
-
-.header-btn {
-  background: none;
-  border: none;
-  margin: 0;
-  font-size: 1em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
 h1 {
   font-size: 5em;
   line-height: 1.1;
@@ -72,15 +45,6 @@ h1 {
 
 h2 {
   margin: 1vh;
-}
-
-input {
-  font-size: 1em;
-  border-radius: 10px;
-  padding: 10px;
-  border: none;
-  height: 30px;
-  width: 270px;
 }
 
 button {
@@ -101,124 +65,4 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-.sidebar {
-  position: fixed;
-  top: 0;
-  right: -100vw; 
-  width: 300px;
-  height: 100%;
-  background-color: #242424;
-  color: #fff;
-  padding: 2em;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.3);
-  transition: right 0.3s ease;
-  z-index: 2000;
-}
-
-.sidebar.open {
-  position: fixed;
-  top: 0;
-  right: 0px; 
-  width: 300px;
-  height: 100%;
-  background-color: #242424;
-  color: #fff;
-  padding: 2em;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.3);
-  transition: right 0.3s ease;
-  z-index: 2000;
-}
-
-.sidebar-sect {
-  margin-top: 5vh;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.2em;
-  cursor: pointer;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-.profile-text{
-  font-size: 35px;
-}
-
-.username-text {
-  cursor: pointer;
-  background-color: #1a1a1a;
-  border-radius: 15px;
-  height: 50px;
-  align-content: center;
-}
-
-.username-text:hover {
-  color: #535bf2;
-}
-
-.sign-out {
-  color: red;
-}
-
-.leaderboard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.leaderboard-cell {
-  margin: 10px;
-  position: relative;
-  padding: 30px;
-  background-color: #1a1a1a;
-  border-radius: 30px;
-  width: 30vw;
-}
-
-.rank {
-  position: absolute;
-  top: 0px;
-  right: 15px;
-}
-
-.lead-user {
-  margin-bottom: 20px;
-  font-size: min(6vw, 20px)
-}
-
-.lead-text {
-  margin: 0;
-}
-
-.lead-count {
-  font-size: min(8vw, 40px);
-  margin: 0;
-}
-
-.top-leaderboard-cell {
-  margin: 10px;
-  margin-top: 150px;
-  position: relative;
-  padding: 30px;
-  background-color: #1a1a1a;
-  border-radius: 30px;
-  width: 40vw;
-}
-
-.top-rank {
-  position: absolute;
-  top: 0px;
-  right: 15px;
-  color: gold;
-}
-
-.top-lead-count {
-  font-size: min(10vw, 60px);
-  margin: 0;
 }

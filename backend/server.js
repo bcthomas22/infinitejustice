@@ -16,6 +16,6 @@ app.get("/health", (req, res) => {
 app.use("/api/doSomething", doSomething);
 app.use("/api/aiGenerate", aiGenerate);
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });

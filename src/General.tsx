@@ -118,6 +118,17 @@ export function General() {
         </button>)
           
         )}
+      <div>
+        {topic && <>
+        <a 
+          href={"https://en.wikipedia.org/wiki/" + encodeURIComponent(topic)}
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          Learn more about: {topic}
+        </a>
+      </>}
+      </div>
 
     </div>
   )

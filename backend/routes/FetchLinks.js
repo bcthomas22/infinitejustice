@@ -43,15 +43,16 @@ router.post("/", async (req, res) => {
                         const lower = t.toLowerCase();
                         return(
                             !/^\d+$/.test(t) && 
-                            t.length > 10 &&
-                            t.length < 25 && 
+                            t.length > 5 &&
+                            t.length < 20 && 
                             !t.includes(":") &&
                             !lower.includes("list of") &&
                             !lower.includes("template") &&
                             !lower.includes("help") &&
-                            !lower.includes("file")
+                            !lower.includes("file") &&
+                            !lower.includes("(")
                         )})
-                        .sort((a,b) => a.length - b.length)
+                        .sort(() => Math.random() - 0.5)
                         .slice(0,50);
 
     res.json(links);

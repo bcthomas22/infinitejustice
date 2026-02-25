@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const API_BASE = import.meta.env.VITE_API_URL_LOCAL;
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export function General() {
 

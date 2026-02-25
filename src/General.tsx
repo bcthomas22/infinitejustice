@@ -2,6 +2,8 @@ import { useState } from 'react'
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
+console.log("VITE_API_URL =", import.meta.env.VITE_API_URL);
+
 export function General() {
 
   const [outputString, setOutputString] = useState<string>("AI will respond here...");

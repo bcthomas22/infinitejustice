@@ -1,11 +1,14 @@
 import { useState } from 'react'
 
-const API_BASE = import.meta.env.VITE_API_URL;
+const API_BASE = import.meta.env.VITE_API_URL_LOCAL;
 
 export function General() {
 
   const [outputString, setOutputString] = useState<string>("AI will respond here...");
-  const [inputString, setInputString] = useState<string>("");
+  const [outputLinks, setOutputLinks] = useState<string[]>([]);
+  const [aiInputString, setAiInputString] = useState<string>("");
+  const [linkInputString, setLinkInputString] = useState<string>("");
+  const [topic, setTopic] = useState<string>("");
 
   const getSomething = async () => {
       const res = await fetch(`${API_BASE}/api/doSomething`);
@@ -19,7 +22,7 @@ export function General() {
   }
 
   const askAI = async () => {
-    if(inputString === ""){
+    if(aiInputString === ""){
       return;
     }
 
@@ -28,7 +31,7 @@ export function General() {
     const res = await fetch(`${API_BASE}/api/aiGenerate`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({prompt: inputString})
+      body: JSON.stringify({prompt: aiInputString})
     })
 
     if(!res.ok){
@@ -36,8 +39,29 @@ export function General() {
     }
 
     const data = await res.json()
-    setInputString("");
+    setAiInputString("");
     setOutputString(data.response);
+  }
+
+  const fetchLinks = async (input: string) => {
+    if(input === ""){
+      return;
+    }
+
+    const res = await fetch(`${API_BASE}/api/fetchLinks`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({topic: input})
+    })
+
+    if(!res.ok){
+      throw new Error("Error with getting links");
+    }
+
+    const data = await res.json();
+    setLinkInputString("");
+    setOutputLinks(data);
+    setTopic(input);
   }
 
   return (
@@ -52,14 +76,46 @@ export function General() {
           type="text" 
           placeholder='Ask me something...' 
           className='input-textbox'
-          value={inputString}
-          onChange={(e)=>{setInputString(e.target.value)}}
+          value={aiInputString}
+          onChange={(e)=>{setAiInputString(e.target.value)}}
         >
         </input>
         <button onClick={askAI} className='input-button'>Ask</button>
       </div>
 
       <button onClick={getSomething}>Get Something</button>
+
+      <h2>Links: </h2>
+      <div className='input-div'>
+        <input 
+          type="text" 
+          placeholder='Enter a topic...' 
+          className='input-textbox'
+          value={linkInputString}
+          onChange={(e)=>{setLinkInputString(e.target.value)}}
+        >
+        </input>
+        <button onClick={() => fetchLinks(linkInputString)} className='input-button'>Search</button>
+      </div>
+
+      {topic && <>
+        <h1>{topic}</h1>
+        <h2>leads to:</h2>
+      </>}
+
+      {outputLinks.map((l,i) => (
+        
+        <button
+        key={i}
+        onClick={() => {
+          setLinkInputString(l);
+          fetchLinks(l);
+        }}
+        >
+          <h2>{l}</h2>
+        </button>)
+          
+        )}
 
     </div>
   )

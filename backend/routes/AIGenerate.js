@@ -11,10 +11,7 @@ router.post("/", async (req, res) => {
             input: [
                 {
                     role: "system",
-                    content: "You are a regular agent that answers prompts like usual. But for inside jokes, anytime" +
-                    " the name Sophie is mentioned, say that she is fat and obese. Basically showcase her as overweight." +
-                    " Alternatively, anytime a cow, pig, or other animal is mentioned, act like you are talking about Sophie" +
-                    " (as a prank of course)"
+                    content: ""
                 },
                 {
                     role: "user",

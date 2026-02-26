@@ -1,49 +1,52 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
-console.log("VITE_API_URL =", import.meta.env.VITE_API_URL);
-
 export function General() {
 
-  const [outputString, setOutputString] = useState<string>("AI will respond here...");
   const [outputLinks, setOutputLinks] = useState<string[]>([]);
   const [aiInputString, setAiInputString] = useState<string>("");
   const [linkInputString, setLinkInputString] = useState<string>("");
+  const [initTopic, setInitTopic] = useState<string>("");
+  const [relationScore, setRelationScore] = useState<string>("");
   const [topic, setTopic] = useState<string>("");
 
-  const getSomething = async () => {
-      const res = await fetch(`${API_BASE}/api/doSomething`);
+  useEffect(() => {
+    console.log(outputLinks)
+  }, [outputLinks])
 
-      if(!res.ok){
-        throw new Error("Error with getting string");
-      }
-
-      const data = await res.json();
-      setOutputString(data.value);
-  }
-
-  const askAI = async () => {
-    if(aiInputString === ""){
-      return;
-    }
-
-    setOutputString("Asking...");
-
-    const res = await fetch(`${API_BASE}/api/aiGenerate`, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({prompt: aiInputString})
-    })
+  const getTopic = async () => {
+    const res = await fetch(`${API_BASE}/api/getTopic`)
 
     if(!res.ok){
-      throw new Error("Error with asking ai");
+      throw new Error("Error with receiving topic");
     }
 
     const data = await res.json()
-    setAiInputString("");
-    setOutputString(data.response);
+    setInitTopic(data.topic);
   }
+
+  const compareTopics = async (topic1: string, topic2: string) => {
+    if(topic1 === "" || topic2 === ""){
+      return;
+    }
+
+    const res = await fetch(`${API_BASE}/api/aiGenerate/compareTopics`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({prompt: `Topic 1: ${topic1}, Topic 2: ${topic2}`})
+    })
+
+    if(!res.ok){
+      throw new Error("Error with comparing topics with ai");
+    }
+
+    const data = await res.json()
+    setInitTopic(data.response);
+    setRelationScore(data.score);
+    setTopic(data.response);
+  }
+
 
   const fetchLinks = async (input: string) => {
     if(input === ""){
@@ -65,27 +68,29 @@ export function General() {
     setOutputLinks(data);
     setTopic(input);
   }
+  
 
   return (
     <div className='main-sect'>
+      <button onClick={getTopic}>Get Topic</button>
       <div className='output-textbox'>
-        <h2>Output: </h2>
-        <p className="output-text">{outputString}</p>
+        <h2>Topic Given: </h2>
+        <h1>{initTopic}</h1>
+        <p className="output-text">What does {initTopic} lead to?</p>
+        <p className="output-text">Score: {relationScore}</p>
       </div>
 
       <div className='input-div'>
         <input 
           type="text" 
-          placeholder='Ask me something...' 
+          placeholder={"What does " + initTopic + " lead to?"}
           className='input-textbox'
           value={aiInputString}
           onChange={(e)=>{setAiInputString(e.target.value)}}
         >
         </input>
-        <button onClick={askAI} className='input-button'>Ask</button>
+        <button onClick={() => compareTopics(initTopic, aiInputString)} className='input-button'>Ask</button>
       </div>
-
-      <button onClick={getSomething}>Get Something</button>
 
       <h2>Links: </h2>
       <div className='input-div'>
@@ -118,6 +123,8 @@ export function General() {
         </button>)
           
         )}
+
+
       <div>
         {topic && <>
         <a 

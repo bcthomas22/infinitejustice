@@ -2,42 +2,40 @@ const express = require("express");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
+    try{
 
-    const topic = req.body.topic.trim();
-    const topicNormalized = topic.charAt(0).toUpperCase() + topic.slice(1);
+        const topic = req.body.topic.trim();
+        const topicNormalized = topic.charAt(0).toUpperCase() + topic.slice(1);
 
-    if (topicNormalized === ""){
-        res.json({error: "no topic given"})
-        return
-    }
-
-    let allLinks = [];
-    let plcontinue = null;
-
-    do{
-        const resp = await fetch(
-            `https://en.wikipedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent(topicNormalized)}&prop=links&pllimit=500&origin=*${plcontinue ? `&plcontinue=${plcontinue}` : "" }`
-        )
-
-        if(!resp.ok){
-            res.json({error: "wiki fetch error"})
-            return;
+        if (topicNormalized === ""){
+            res.json({error: "no topic given"})
+            return
         }
 
-        const data = await resp.json();
+        let allLinks = [];
+        let plcontinue = null;
 
-        const page = Object.values(data.query.pages)[0]
+        do{
+            const resp = await fetch(
+                `https://en.wikipedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent(topicNormalized)}&prop=links&pllimit=500&origin=*${plcontinue ? `&plcontinue=${plcontinue}` : "" }`,
+                { headers: {
+                    "User-Agent": "InfiniteJustice/1.0 (https://github.com/bcthomas22/infinitejustice)"
+                }}
+            )
 
-        if(page.links) {
-            allLinks.push(...page.links)
-        }
+            const data = await resp.json();
 
-        plcontinue = data.continue?.plcontinue || null;
+            const page = Object.values(data.query.pages)[0]
 
-    
-    }while(plcontinue);
+            if(page.links) {
+                allLinks.push(...page.links)
+            }
 
-    const links = allLinks
+            plcontinue = data.continue?.plcontinue || null;
+
+        }while(plcontinue);
+
+        const links = allLinks
                        .map(l => l.title)
                        .filter(t => {
                         const lower = t.toLowerCase();
@@ -55,7 +53,11 @@ router.post("/", async (req, res) => {
                         .sort(() => Math.random() - 0.5)
                         .slice(0,50);
 
-    res.json(links);
+        res.json(links);
+    }
+    catch(error){
+        res.status(500).json({ err: error.message });
+    }
 })
 
 module.exports = router;

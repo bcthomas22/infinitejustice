@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const doSomething = require("./routes/DoSomething");
+const getTopic = require("./routes/GetTopic");
 const aiGenerate = require("./routes/AIGenerate");
 const fetchLinks = require("./routes/FetchLinks");
 
@@ -17,7 +17,7 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK" });
 });
 
-app.use("/api/doSomething", doSomething);
+app.use("/api/getTopic", getTopic);
 app.use("/api/aiGenerate", aiGenerate);
 app.use("/api/fetchLinks", fetchLinks);
 

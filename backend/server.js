@@ -18,7 +18,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/getTopic", getTopic);
-app.use("/api/aiGenerate", aiGenerate);
+app.use("/api/aiGenerate", aiGenerate.router);
 app.use("/api/fetchLinks", fetchLinks);
 
 app.listen(PORT, "0.0.0.0", () => {

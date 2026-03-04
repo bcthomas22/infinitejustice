@@ -1,3 +1,4 @@
+const { getGoalFromInitTopic } = require("./AIGenerate")
 const express = require("express");
 const router = express.Router();
 
@@ -6,8 +7,6 @@ const starterTopics = [
   "Colonialism",
   "Surveillance",
   "Manipulation",
-  "Extraction",
-  "Disinformation",
   "Misinformation",
   "Propaganda",
   "Corruption",
@@ -17,12 +16,9 @@ const starterTopics = [
   "Militarization",
   "Censorship",
   "Displacement",
-  "Greenwashing",
   "Redlining",
   "Profiling",
   "Precarity",
-  "Privatization",
-  "Commodification",
   "Financialization",
   "Dehumanization",
   "Marginalization",
@@ -49,9 +45,6 @@ const starterTopics = [
   "Gouging",
   "Hoarding",
   "Bias",
-  "Opacity",
-  "Monopoly",
-  "Cartelization",
   "Cronyism",
   "Nepotism",
   "Authoritarianism",
@@ -59,9 +52,7 @@ const starterTopics = [
   "Retaliation",
   "Intimidation",
   "Weaponization",
-  "Exfiltration",
   "Colonization",
-  "Expropriation",
   "Exhaustion",
   "Addiction",
   "Dependency",
@@ -74,15 +65,9 @@ const starterTopics = [
   "Insecurity",
   "Radicalism",
   "Centralization",
-  "Extractionism",
   "Digitalization",
-  "Dataveillance",
-  "Technocracy",
   "Autocracy",
-  "Plutocracy",
-  "Oligarchy",
   "Predation",
-  "Speculation",
   "Commoditization",
   "Subjugation",
   "Disempowerment",
@@ -101,7 +86,6 @@ const starterTopics = [
   "Surveillance capitalism",
   "Privacy erosion",
   "Consent manipulation",
-  "Dark patterns",
   "Biometric misuse",
   "Predictive policing",
   "Facial misidentification",
@@ -151,7 +135,6 @@ const starterTopics = [
   "E-waste dumping",
   "Planned obsolescence",
   "Mining exploitation",
-  "Rare earth extraction",
   "Biodiversity collapse",
   "Habitat destruction",
   "Species extinction",
@@ -188,16 +171,10 @@ const starterTopics = [
   "Tax evasion",
   "Offshore shelters",
   "Wealth hoarding",
-  "Economic inequality",
-  "Monopoly power",
-  "Corporate consolidation",
-  "Crony capitalism",
   "State surveillance",
   "Mass monitoring",
-  "Social credit",
   "Censorship regimes",
   "Information control",
-  "Whistleblower retaliation",
   "Journalist intimidation",
   "Propaganda machinery",
   "Political corruption",
@@ -215,8 +192,6 @@ const starterTopics = [
   "Ransomware attacks",
   "Infrastructure hacking",
   "Critical vulnerabilities",
-  "Backdoor access",
-  "Zero-day hoarding",
   "Encryption backdoors",
   "Corporate espionage",
   "Insider trading",
@@ -244,7 +219,6 @@ const starterTopics = [
   "Education inequity",
   "Student debt",
   "Predatory lending",
-  "Payday loans",
   "Surveillance advertising",
   "Emotional manipulation",
   "Behavioral nudging",
@@ -260,16 +234,19 @@ const starterTopics = [
   "Liability avoidance",
   "Accountability gaps",
   "Ethics washing",
-  "Compliance theater",
-  "Reputation laundering",
-  "Impact inflation",
-  "Token diversity",
   "Performative activism"
 ];
 
-router.get("/", (req, res) => {
+router.get("/", async (_req, res) => {
+
   const rndTopic = starterTopics[Math.floor(Math.random() * starterTopics.length)]
-  res.json({topic: rndTopic});
+  const goalFromTopic = await getGoalFromInitTopic(rndTopic);
+
+  res.json({
+    topic: rndTopic, 
+    goal: goalFromTopic ?? "NONE"
+  });
+
 })
 
 module.exports = router;

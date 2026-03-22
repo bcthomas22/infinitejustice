@@ -1,13 +1,12 @@
 import './App.css'
-import { General } from "./General.tsx";
-import { Header } from "./Header.tsx";
+import './Colors.css'
+import { MainPage } from './MainPage'
 
 function App() {
 
   return (
     <>
-      <Header/>
-      <General />
+      <MainPage/>
     </>
   )
 

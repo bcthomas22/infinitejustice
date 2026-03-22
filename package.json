@@ -14,10 +14,13 @@
   "homepage": "https://bcthomas22.github.io/infinitejustice/",
   "dependencies": {
     "@supabase/supabase-js": "^2.75.0",
+    "aws-sdk": "^2.1693.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "lucide-animated": "^1.0.0",
     "lucide-react": "^0.545.0",
     "openai": "^6.22.0",
+    "pg": "^8.20.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

@@ -1,0 +1,67 @@
+:root{
+    --cyan: #4db;
+    --green: #1d1;
+    --yellow-green: #ad1;
+    --yellow: #dd1;
+    --orange: #d91;
+    --orange-red: #d61;
+    --red: #c11;
+    --grey: #333;
+}
+
+.cyan-rating {
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+    box-shadow: inset 0 0 20px color-mix(in srgb, var(--cyan), transparent 85%);;
+}
+
+.green-rating {
+    color: var(--green);
+    border: 1px solid var(--green);
+    box-shadow: inset 0 0 20px color-mix(in srgb, var(--green), transparent 85%);;
+}
+
+.yellow-green-rating {
+    color: var(--yellow-green);
+    border: 1px solid var(--yellow-green);
+    box-shadow: inset 0 0 20px color-mix(in srgb, var(--yellow-green), transparent 85%);;
+}
+
+.yellow-rating {
+    color: var(--yellow);
+    border: 1px solid var(--yellow);
+    box-shadow: inset 0 0 20px color-mix(in srgb, var(--yellow), transparent 85%);;
+}
+
+.orange-rating {
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    box-shadow: inset 0 0 20px color-mix(in srgb, var(--orange), transparent 85%);;
+}
+
+.orange-red-rating {
+    color: var(--orange-red);
+    border: 1px solid var(--orange-red);
+    box-shadow: inset 0 0 20px color-mix(in srgb, var(--orange-red), transparent 85%);;
+}
+
+.red-rating {
+    color: var(--red);
+    border: 1px solid var(--red);
+    box-shadow: inset 0 0 20px color-mix(in srgb, var(--red), transparent 85%);;
+}
+
+.grey-rating {
+    color: var(--grey);
+    border: 1px solid var(--grey);
+    box-shadow: inset 0 0 20px color-mix(in srgb, var(--grey), transparent 85%);;
+}
+
+.is-human-text {
+    color: var(--green);
+}
+
+.is-ai-text {
+    color: var(--cyan)
+}
+

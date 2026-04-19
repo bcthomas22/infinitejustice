@@ -1,4 +1,5 @@
 import { PanelLeft } from "lucide-react";
+import logo from '../public/InfJustLogo.svg';
 
 type CenterBoxHeaderProps = {
     isSidebarOpen: boolean
@@ -15,7 +16,7 @@ export function CenterBoxHeader(props: CenterBoxHeaderProps) {
                 <PanelLeft/>
             </button>
             <span className="header-main-text">Infinite Justice</span>
-            <span className="header-sub-text">Logo</span>
+            <img className="header-logo" src={logo}/>
         </div>
     )
 }

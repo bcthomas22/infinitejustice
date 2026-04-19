@@ -98,6 +98,12 @@
   transition: color 0.2s;
 }
 
+.header-logo {
+  margin: auto;
+  width: 3em;
+  padding-bottom: 8px;
+}
+
 .main-sect {
   margin-top: 75px;
   align-items: center;

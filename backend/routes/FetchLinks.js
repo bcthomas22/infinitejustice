@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
             const resp = await fetch(
                 `https://en.wikipedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent(topicNormalized)}&prop=links&pllimit=500&origin=*${plcontinue ? `&plcontinue=${plcontinue}` : "" }`,
                 { headers: {
-                    "User-Agent": "InfiniteJustice/1.0 (https://github.com/bcthomas22/infinitejustice)"
+                    "User-Agent": "InfiniteJustice/1.0 (infinitejustice.org)"
                 }}
             )
 

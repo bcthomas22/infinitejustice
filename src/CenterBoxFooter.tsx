@@ -47,7 +47,6 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
         if (showHints && hints.length === 0) {
             getHints(props.currentTopic)
         }
-        console.log(hints)
     }, [showHints])
 
     return (

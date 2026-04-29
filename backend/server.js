@@ -3,19 +3,13 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
-console.log("Step 1")
-
 const getTopic = require("./routes/GetTopic");
-console.log("Step 2")
 
 const aiGenerate = require("./routes/AIGenerate");
-console.log("Step 3")
 
 const fetchLinks = require("./routes/FetchLinks");
-console.log("Step 4")
 
 const accessDB = require("./routes/AccessDB")
-console.log("Step 5")
 
 
 const app = express();

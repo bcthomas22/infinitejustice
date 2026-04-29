@@ -1,5 +1,3 @@
-console.log("DB Module Loaded")
-
 require("dotenv").config();
 const { Pool } = require("pg");
 

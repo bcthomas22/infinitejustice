@@ -29,7 +29,7 @@ const getGoalFromInitTopic = async (topic) => {
                             goal: { 
                                 type: "string",
                                 description: process.env.INFINITE_JUSTICE_GOAL_PROMPT,
-                                pattern: "[A-Z][a-z ]*"
+                                pattern: "^[A-Z][A-Za-z ]*$"
                             }
                         },
                         required: ["goal"],
@@ -140,7 +140,7 @@ router.post("/compareTopics", async (req, res) => {
                             response: { 
                                 type: "string",
                                 description: process.env.INFINITE_JUSTICE_RETURN_PROMPT,
-                                pattern: "[A-Z][a-z ]*"
+                                pattern: "^[A-Z][A-Za-z ]*$"
                             }
                         },
                         required: ["score", "response"],
@@ -251,7 +251,7 @@ router.post("/getHintsFromTopic", async (req, res) => {
                                 description: process.env.INFINITE_JUSTICE_HINTS_PROMPT,
                                 items: {
                                     type: "string",
-                                    pattern: "[A-Z][a-z ]*"
+                                    pattern: "^[A-Z][A-Za-z ]*$"
                                 }
                             }
                         },

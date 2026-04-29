@@ -8,6 +8,7 @@ const API_BASE = import.meta.env.VITE_API_URL;
 type CreatePageProps = {
     isSidebarOpen: boolean
     setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
+    updateTopic(s: string): void 
 }
 
 export function CreatePage(props: CreatePageProps) {
@@ -18,12 +19,28 @@ export function CreatePage(props: CreatePageProps) {
     const [mostRecentTopic, setMostRecentTopic] = useState<string | null>(null);
     const [percentComplete, setPercentComplete] = useState<number | null>(0);
     const [averageRating, setAverageRating] = useState<number | null>(0);
+    const [blockUserInput, setBlockUserInput] = useState<boolean>(false); 
 
     useEffect(() => {
-        startGame();
+        if(!startingTopic) startGame();
     }, [])
 
+    useEffect(() => {
+        if (mostRecentTopic) props.updateTopic(mostRecentTopic)
+    }, [mostRecentTopic])
+
+    const startGame = async () => {
+        await getStartingEndingTopic();
+        setCurrentLinks([]);
+        setAverageRating(0);
+        setPercentComplete(0);
+    }
+
     const getStartingEndingTopic = async () => {
+        setStartingTopic(null);
+        setMostRecentTopic(null);
+        setEndingTopic(null);
+
         const res = await fetch(`${API_BASE}/api/getTopic`)
 
         if(!res.ok){
@@ -36,13 +53,6 @@ export function CreatePage(props: CreatePageProps) {
         setEndingTopic(data.goal);
     }
 
-    const startGame = async () => {
-        await getStartingEndingTopic();
-        setCurrentLinks([]);
-        setAverageRating(0);
-        setPercentComplete(0);
-    }
-
     const compareTopicsAppendTo = async (topic1: string, topic2: string) => {
 
         if(endingTopic === null)
@@ -52,6 +62,7 @@ export function CreatePage(props: CreatePageProps) {
             return;
         }
 
+        setBlockUserInput(true);
         setMostRecentTopic(topic2);
 
         const initAddedLink: TopicLink = {
@@ -62,13 +73,13 @@ export function CreatePage(props: CreatePageProps) {
         }
 
         const initAILink: TopicLink = {
-            topic1: null,
+            topic1: topic2,
             topic2: null,
             rating: undefined,
             isHuman: false
         }
 
-        setCurrentLinks([...currentLinks, initAddedLink]);
+        setCurrentLinks(prev => [...prev, initAddedLink]);
         setAverageRating(null);
 
         const res = await fetch(`${API_BASE}/api/aiGenerate/compareTopics`, {
@@ -78,6 +89,7 @@ export function CreatePage(props: CreatePageProps) {
         })
 
         if(!res.ok){
+            setBlockUserInput(false);
             throw new Error("Error with comparing topics with ai");
         }
 
@@ -89,6 +101,7 @@ export function CreatePage(props: CreatePageProps) {
             rating:  data.score,
             isHuman: true
         }
+        addLink(afterAddedLink);
 
         const afterAILink: TopicLink = {
             topic1: topic2,
@@ -96,15 +109,25 @@ export function CreatePage(props: CreatePageProps) {
             rating: undefined,
             isHuman: false
         }
+        addLink(afterAILink);
 
-        setCurrentLinks([...currentLinks.filter((_l, i) => (i === currentLinks.length-1)), afterAddedLink, initAILink]);
+        setCurrentLinks(prev => { 
+            const updated = [...prev];
+            updated[updated.length - 1] = afterAddedLink;
+            updated.push(initAILink);
+            return updated;
+        })
 
-        await setTimeout(()=>{
-            setCurrentLinks([...currentLinks.filter((_l, i) => (i === currentLinks.length-1)), afterAILink]);
-        }, 500);
+        setTimeout(()=>{
+            setCurrentLinks(prev => { 
+            const updated = [...prev];
+            updated[updated.length - 1] = afterAILink;
+            return updated;
+        })}, 500);
 
         getPercentComplete(data.response, endingTopic);
-        setAverageRating(newAverageRating(currentLinks.filter(l => !l.isHuman).length, averageRating ?? 0, data.score))
+        setMostRecentTopic(data.response);
+        setBlockUserInput(false);
     }
 
     const sendTopicToChat = (topic: string) => {
@@ -130,10 +153,42 @@ export function CreatePage(props: CreatePageProps) {
         setPercentComplete(dataProg.score)
     }
 
-    const newAverageRating = (allRatedLinksLength: number, oldAverageRating: number, newRating: number) => {
-        if(allRatedLinksLength === 0 || oldAverageRating === 0)
-            return newRating;
-        return Math.ceil(((allRatedLinksLength * oldAverageRating) + newRating) / (oldAverageRating + 1))
+    useEffect(() => {
+        getAverageRatingFromLinks(currentLinks);
+    }, [currentLinks])
+
+
+    const getAverageRatingFromLinks = (topicLinks: TopicLink[]) => {
+        const onlyRated = topicLinks.filter(l => l.isHuman && l.rating);
+        
+        const totalRating = onlyRated.reduce(((acc, x) => acc + (x.rating ?? 0)), 0)
+
+        setAverageRating(Math.ceil(totalRating / onlyRated.length));
+    }
+
+    //db writing
+    const addLink = async (link: TopicLink) => {
+        if (!link.topic1 || !link.topic2)
+            return;
+        const addedLink = {
+            topic1: link.topic1,
+            topic2: link.topic2,
+            rating: link.rating ?? -1,
+            isHuman: link.isHuman
+        }
+
+        const res = await fetch(`${API_BASE}/api/accessDB/addLink`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(addedLink)
+        })
+
+        if(!res.ok){
+            throw new Error("Error with adding link to DB");
+        }
+
+        const data = await res.json();
+        console.log("succesfully added" + data);
     }
 
     return (
@@ -166,6 +221,7 @@ export function CreatePage(props: CreatePageProps) {
                 currentCreateLinks={currentLinks}
                 sendTopicToChat={sendTopicToChat}
                 mostRecentTopic={mostRecentTopic ?? ""}
+                blockUserInput={blockUserInput}
                 searchTopic={null}
                 setTopicsForChain={(_s: string[]) => {}}
                 listedChains={[]}

@@ -1,9 +1,9 @@
 const express = require("express");
-const client = require("../db")
+const pool = require("../db")
 const router = express.Router();
 
 router.post("/addLink", async (req, res) => {
-    const {topic1, topic2, score, isHuman} = req.body;
+    const {topic1, topic2, rating, isHuman} = req.body;
 
     const insertQuery = `
         INSERT INTO links (start_topic, end_topic, rating, is_human)
@@ -11,72 +11,76 @@ router.post("/addLink", async (req, res) => {
         RETURNING *;
     `;
 
-    const values = [topic1, topic2, score, isHuman];
+    const values = [topic1, topic2, rating, isHuman];
 
     try {
-        const result = await client.query(insertQuery, values);
+        const result = await pool.query(insertQuery, values);
         res.json(result.rows[0]);
     } catch (err) {
         console.error("Database error:", err);
-        res.status(500).json({ error: "Database query failed" });
+        res.status(500).json({ error: err.message, detail: err.detail });
     }
 })
 
 router.post("/getLinks", async (req, res) => {
     const {topic, searchStartTopics} = req.body;
 
+    const col = searchStartTopics ? "start_topic" : "end_topic";
+
     const selectQuery = `
         SELECT * FROM links 
-        WHERE ${searchStartTopics ? "start_topic" : "end_topic"} = $1
+        WHERE ${col} = $1
         ORDER BY rating DESC
         LIMIT 50
     `;
 
     try {
-        const result = await client.query(selectQuery, [topic]);
+        const result = await pool.query(selectQuery, [topic]);
         res.json(result.rows);
     } catch (err) {
         console.error("Database error:", err);
-        res.status(500).json({ error: "Database query failed" });
+        res.status(500).json({ error: err.message, detail: err.detail });
     }
 })
 
 router.post("/addChain", async (req, res) => {
-    const {topic1, topic2, topic_chain, score} = req.body;
+    const {topic1, topic2, rating, topic_chain} = req.body;
 
     const insertQuery = `
-        INSERT INTO chains (start_topic, end_topic, all_topics, rating)
+        INSERT INTO chains (start_topic, end_topic, rating, topic_chain)
         VALUES ($1, $2, $3, $4)
         RETURNING *;
     `;
 
-    const values = [topic1, topic2, topic_chain, score];
+    const values = [topic1, topic2, topic_chain, rating];
 
     try {
-        const result = await client.query(insertQuery, values);
+        const result = await pool.query(insertQuery, values);
         res.json(result.rows[0]);
     } catch (err) {
         console.error("Database error:", err);
-        res.status(500).json({ error: "Database query failed" });
+        res.status(500).json({ error: err.message, detail: err.detail });
     }
 })
 
 router.post("/getChains", async (req, res) => {
     const {topic, searchStartTopics} = req.body;
 
+    const col = searchStartTopics ? "start_topic" : "end_topic";
+
     const selectQuery = `
         SELECT * FROM chains 
-        WHERE ${searchStartTopics ? "start_topic" : "end_topic"} = $1
+        WHERE ${col} = $1
         ORDER BY rating DESC
         LIMIT 50
     `;
 
     try {
-        const result = await client.query(selectQuery, [topic]);
+        const result = await pool.query(selectQuery, [topic]);
         res.json(result.rows);
     } catch (err) {
         console.error("Database error:", err);
-        res.status(500).json({ error: "Database query failed" });
+        res.status(500).json({ error: err.message, detail: err.detail });
     }
 })
 

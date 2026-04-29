@@ -46,12 +46,12 @@ export function LeftSidebar(props: LeftSidebarProps) {
                             <ProgressBar 
                                 label="Percent Complete" 
                                 displayValue={props.percentComplete ? `${props.percentComplete}%` : null} 
-                                value={props.averageRating ?? 0} 
+                                value={props.percentComplete ?? 0} 
                                 max={100} 
                             />
                             <ProgressBar 
                                 label="Average Rating" 
-                                displayValue={props.averageRating ? `${props.averageRating}%` : null}
+                                displayValue={props.averageRating ? `${props.averageRating}` : null}
                                 value={props.averageRating ?? 0} 
                                 max={100} 
                             />
@@ -63,7 +63,7 @@ export function LeftSidebar(props: LeftSidebarProps) {
                             </div>
 
                             <WhatAmIDoing start={props.startingTopic ?? "Pollution"} goal={props.endingTopic ?? "Air Quality"}/>
-                            <HintSummaryButtons />
+                            <HintSummaryButtons currentTopic={props.topicsStringList[props.topicsStringList.length - 1]}/>
                         </>
                     ):(
                         <>
@@ -158,10 +158,14 @@ function StartEndButtons(props: StartEndButtonsProps) {
     )
 }
 
-function HintSummaryButtons() {
+type HintSummaryButtonsProps = {
+    currentTopic: string
+}
+
+function HintSummaryButtons(props: HintSummaryButtonsProps) {
     return (
         <div className="left-sidebar-element">
-            <p>Current topic: Snacks</p>
+            <p>Current topic: {props.currentTopic}</p>
             <button>Hint</button>
             <button>Summary</button>
         </div>
@@ -203,8 +207,8 @@ function ProgressTopicList(props: ProgressTopicListProps) {
             <p className="progress-bar-text">Start:</p>
             <div className="plain-topic-holder">{start}</div>
             <p className="progress-bar-text">Progress:</p>
-            {rest.map((t) => (
-                <div className="plain-topic-holder">{t}</div>
+            {rest.map((t, i) => (
+                <div key={i} className="plain-topic-holder">{t}</div>
             ))}
             <p className="progress-bar-text">Current:</p>
             <div className="plain-topic-holder">{curr}</div>

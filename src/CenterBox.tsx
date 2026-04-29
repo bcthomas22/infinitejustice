@@ -13,6 +13,7 @@ type CenterBoxProps = {
     currentCreateLinks: TopicLink[]
     sendTopicToChat(s: string): void
     mostRecentTopic: string
+    blockUserInput: boolean
     searchTopic: string | null
     setTopicsForChain(s: string[]): void
     listedLinks: TopicLink[]
@@ -43,6 +44,8 @@ export function CenterBox(props: CenterBoxProps) {
                 <CenterBoxFooter 
                     sendTopicToChat={props.sendTopicToChat}
                     currentTopic={props.mostRecentTopic}
+                    blockUserInput={props.blockUserInput}
+                    isSidebarOpen={props.isSidebarOpen}
                 /> </>
             ) : ( <>
                 <CenterBoxHeader 

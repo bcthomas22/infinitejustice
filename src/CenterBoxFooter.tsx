@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 type CenterBoxFooterProps = {
     sendTopicToChat(s: string): void
     currentTopic: string
+    blockUserInput: boolean
+    isSidebarOpen: boolean
 }
 
 const API_BASE = import.meta.env.VITE_API_URL;
@@ -15,7 +17,7 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
 
     const [inputText, setInputText] = useState<string>("");
     const [showHints, setShowHints] = useState<boolean>(false);
-    const [hints, setHints] = useState<string[]>(["Hint 1", "Hint 2", "Hint 3"]);
+    const [hints, setHints] = useState<string[]>([]);
 
     const send = () => {
         props.sendTopicToChat(inputText);
@@ -50,7 +52,7 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
     }, [showHints])
 
     return (
-        <div className="center-box-footer">
+        <div className={`center-box-footer ${props.isSidebarOpen ? "sidebar-open" : ""}`}>
             {!showHints ? (
                 <div className="chat-input">
                 <button 
@@ -60,8 +62,9 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
                     <Lightbulb />
                 </button>
                 <input 
+                    disabled={props.blockUserInput}
                     className="chat-textbox" 
-                    placeholder={`What does ${props.currentTopic} lead to?`}
+                    placeholder={`What does ${props.currentTopic.toLowerCase()} lead to?`}
                     value={inputText}
                     onChange={(e) => {setInputText(e.target.value)}}
                     onKeyDown={(e) => {if (e.key === "Enter") send()}}

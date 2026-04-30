@@ -131,6 +131,7 @@ export function CreatePage(props: CreatePageProps) {
                 return updated;
             })
             setIsAtGoal(true);
+            setPercentComplete(100);
             return;
         }
 

@@ -60,7 +60,7 @@ button {
   margin: 1vh;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #4db;
 }
 button:focus,
 button:focus-visible {

@@ -19,7 +19,8 @@ export function CreatePage(props: CreatePageProps) {
     const [mostRecentTopic, setMostRecentTopic] = useState<string | null>(null);
     const [percentComplete, setPercentComplete] = useState<number | null>(0);
     const [averageRating, setAverageRating] = useState<number | null>(0);
-    const [blockUserInput, setBlockUserInput] = useState<boolean>(false); 
+    const [blockUserInput, setBlockUserInput] = useState<boolean>(false);
+    const [isAtGoal, setIsAtGoal] = useState<boolean>(false);
 
     useEffect(() => {
         if(!startingTopic) startGame();
@@ -29,11 +30,28 @@ export function CreatePage(props: CreatePageProps) {
         if (mostRecentTopic) props.updateTopic(mostRecentTopic)
     }, [mostRecentTopic])
 
+    const normalizeString =(s: string) => {
+        const trimmed = s.trim();
+        const reg = trimmed.replace(/[^a-zA-Z ]/g, "")
+        const formatted = reg.charAt(0).toUpperCase() + reg.slice(1).toLowerCase();
+        return formatted;
+    }
+
     const startGame = async () => {
+        setBlockUserInput(true);
         await getStartingEndingTopic();
         setCurrentLinks([]);
         setAverageRating(0);
         setPercentComplete(0);
+        setBlockUserInput(false);
+        setIsAtGoal(false);
+    }
+
+    const submitCurrent = async () => {
+        setBlockUserInput(true);
+        await addChain(currentLinks);
+        await startGame();
+        setBlockUserInput(false);
     }
 
     const getStartingEndingTopic = async () => {
@@ -103,6 +121,17 @@ export function CreatePage(props: CreatePageProps) {
         }
         addLink(afterAddedLink);
 
+        //check if user reached the goal
+        if(topic2 === endingTopic){
+            setCurrentLinks(prev => { 
+                const updated = [...prev];
+                updated[updated.length - 1] = afterAddedLink;
+                return updated;
+            })
+            setIsAtGoal(true);
+            return;
+        }
+
         const afterAILink: TopicLink = {
             topic1: topic2,
             topic2: data.response,
@@ -131,10 +160,10 @@ export function CreatePage(props: CreatePageProps) {
     }
 
     const sendTopicToChat = (topic: string) => {
-        if (topic === "" || mostRecentTopic === null)
+        if (normalizeString(topic) === "" || normalizeString(mostRecentTopic ?? "") === "")
             return;
 
-        compareTopicsAppendTo(mostRecentTopic, topic)
+        compareTopicsAppendTo(normalizeString(mostRecentTopic ?? ""), normalizeString(topic))
     }
 
     const getPercentComplete = async(topic: string, goal: string) => {
@@ -150,7 +179,7 @@ export function CreatePage(props: CreatePageProps) {
         }
 
         const dataProg = await resProg.json()
-        setPercentComplete(dataProg.score)
+        setPercentComplete(dataProg.progress)
     }
 
     useEffect(() => {
@@ -163,7 +192,9 @@ export function CreatePage(props: CreatePageProps) {
         
         const totalRating = onlyRated.reduce(((acc, x) => acc + (x.rating ?? 0)), 0)
 
-        setAverageRating(Math.ceil(totalRating / onlyRated.length));
+        const avg = Math.ceil(totalRating / onlyRated.length)
+        setAverageRating(avg);
+        return(avg);
     }
 
     //db writing
@@ -186,9 +217,32 @@ export function CreatePage(props: CreatePageProps) {
         if(!res.ok){
             throw new Error("Error with adding link to DB");
         }
+    }
 
-        const data = await res.json();
-        console.log("succesfully added" + data);
+    const addChain = async (links: TopicLink[]) => {
+        if (links.length === 0)
+            return;
+
+        const overallRating = getAverageRatingFromLinks(links);
+
+        const topics = links.flatMap(l => l.topic1 ? [l.topic1] : []).concat(links[links.length - 1].topic2 ?? [])
+
+        const addedChain = {
+            topic1: topics[0],
+            topic2: topics[topics.length - 1],
+            rating: overallRating,
+            topic_chain: topics.join(",")
+        }
+
+        const res = await fetch(`${API_BASE}/api/accessDB/addChain`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(addedChain)
+        })
+
+        if(!res.ok){
+            throw new Error("Error with adding chain to DB");
+        }
     }
 
     return (
@@ -205,6 +259,8 @@ export function CreatePage(props: CreatePageProps) {
                 }
                 percentComplete={percentComplete}
                 averageRating={averageRating}
+                submitCurrent={submitCurrent}
+
                 searchTopic={null}
                 setSearchTopic={(_s: string | null) => {}}
                 searchLinks={false}
@@ -219,13 +275,17 @@ export function CreatePage(props: CreatePageProps) {
                 startingTopic={startingTopic}
                 endingTopic={endingTopic}
                 currentCreateLinks={currentLinks}
-                sendTopicToChat={sendTopicToChat}
                 mostRecentTopic={mostRecentTopic ?? ""}
                 blockUserInput={blockUserInput}
+                submitCurrent={submitCurrent}
+                isAtGoal={isAtGoal}
+
+                sendTopicToChat={sendTopicToChat}
                 searchTopic={null}
                 setTopicsForChain={(_s: string[]) => {}}
                 listedChains={[]}
                 listedLinks={[]}
+                setSearchTopic={(_s: string) => {}}
             />
         </div>
     )

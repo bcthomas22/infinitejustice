@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X, Check } from "lucide-react";
 import { useState } from "react";
 
 type LeftSidebarProps = {
@@ -11,6 +11,7 @@ type LeftSidebarProps = {
     topicsStringList: string[]
     percentComplete: number | null
     averageRating: number | null
+    submitCurrent(): void
     searchTopic: string | null
     setSearchTopic(s: string | null): void
     searchLinks: boolean
@@ -37,7 +38,10 @@ export function LeftSidebar(props: LeftSidebarProps) {
                                 <span className="header-main-text">Create</span>
                             </div>
 
-                            <StartEndButtons restartGame={props.restartGame}/>
+                            <StartEndButtons 
+                                restartGame={props.restartGame}
+                                submitCurrent={props.submitCurrent}
+                            />
 
                             <div className="left-sidebar-label">
                                 <span className="header-main-text">Progress</span>
@@ -63,7 +67,7 @@ export function LeftSidebar(props: LeftSidebarProps) {
                             </div>
 
                             <WhatAmIDoing start={props.startingTopic ?? "Pollution"} goal={props.endingTopic ?? "Air Quality"}/>
-                            <HintSummaryButtons currentTopic={props.topicsStringList[props.topicsStringList.length - 1]}/>
+                            {/*<HintSummaryButtons currentTopic={props.topicsStringList[props.topicsStringList.length - 1]}/>*/}
                         </>
                     ):(
                         <>
@@ -76,12 +80,12 @@ export function LeftSidebar(props: LeftSidebarProps) {
                                 setSearchTopic={props.setSearchTopic}
                             />
 
-                            <TopicList label="Past Topics:" topics={[/*Make array for past links*/]} />
+                            {/*<TopicList label="Past Topics:" topics={[Make array for past links]} />}*/}
 
-                            <LinkChainButtons setSearchLinks={props.setSearchLinks}/>
+                            <LinkChainButtons setSearchLinks={props.setSearchLinks} searchLinks={props.searchLinks}/>
 
                             <TopicList 
-                                label={`Topics for chain: ${props.topicsForChain[0]} to ${props.topicsForChain[props.topicsForChain.length - 1]}`} 
+                                label={`Topics for chain: ${props.topicsForChain[0] ?? "(N/A)"} to ${props.topicsForChain[props.topicsForChain.length - 1] ?? "(N/A)"}`} 
                                 topics={props.topicsForChain} 
                             />
                         </>
@@ -89,8 +93,7 @@ export function LeftSidebar(props: LeftSidebarProps) {
                 </div>
             </div>
         }
-    </>
-        
+    </> 
     )
 }
 
@@ -127,16 +130,17 @@ function SearchTopic(props: SearchTopicProps) {
 
 type LinkChainButtonsProps = {
     setSearchLinks(b: boolean): void
+    searchLinks: boolean
 }
 
 function LinkChainButtons(props: LinkChainButtonsProps) {
     return (
         <div className="left-sidebar-element">
             <p className="progress-bar-text" >Search for:</p>
-            <button 
+            <button className={`left-sidebar-buttons ${props.searchLinks ? "selected" : ""}`}
                 onClick={() => props.setSearchLinks(true)}
             >Links</button>
-            <button 
+            <button className={`left-sidebar-buttons ${!props.searchLinks ? "selected" : ""}`}
                 onClick={() => props.setSearchLinks(false)}
             >Chains</button>
         </div>
@@ -145,19 +149,45 @@ function LinkChainButtons(props: LinkChainButtonsProps) {
 
 type StartEndButtonsProps = {
     restartGame(): void
+    submitCurrent(): void
 }
 
 function StartEndButtons(props: StartEndButtonsProps) {
+
+    const [subState, setSubState] = useState<string | 1 | 2 >("Submit")
+    const [block, setBlock] = useState<boolean>(false);
+
+    const submit = () => {
+        if(block) return;
+        setBlock(true);
+        props.submitCurrent()
+        setSubState(1);
+        setTimeout(() => {
+            setSubState(2);
+        }, 1000);
+        setTimeout(() => {
+            setSubState("Submit");
+        }, 2000);
+        setBlock(false);
+    }
+
     return (
         <div className="left-sidebar-element">
-            <button
+            <button className="left-sidebar-buttons"
                 onClick={() => {props.restartGame()}}
             >Restart</button>
-            <button>Submit</button>
+            <button className="left-sidebar-buttons"
+                onClick={() => submit()}
+            >{
+                subState === 1 ? <div className="loading"></div> :
+                subState === 2 ? <Check /> :
+                subState
+            }</button>
         </div>
     )
 }
 
+/*
 type HintSummaryButtonsProps = {
     currentTopic: string
 }
@@ -171,7 +201,7 @@ function HintSummaryButtons(props: HintSummaryButtonsProps) {
         </div>
     )
 }
-
+*/
 
 type TopicListProps = {
     topics: string[]
@@ -183,8 +213,8 @@ function TopicList(props: TopicListProps) {
     return (
         <div className="left-sidebar-element">
             <p className="progress-bar-text">{props.label}</p>
-            {props.topics.map((t) => (
-                <div className="plain-topic-holder">{t}</div>
+            {props.topics.map((t, i) => (
+                <div key={i} className="plain-topic-holder">{t}</div>
             ))}
         </div>
     )

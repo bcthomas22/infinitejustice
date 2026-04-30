@@ -14,10 +14,13 @@ type CenterBoxProps = {
     sendTopicToChat(s: string): void
     mostRecentTopic: string
     blockUserInput: boolean
+    isAtGoal: boolean
+    submitCurrent(): void
     searchTopic: string | null
     setTopicsForChain(s: string[]): void
     listedLinks: TopicLink[]
     listedChains: TopicChain[]
+    setSearchTopic(s: string): void
 }
 
 export function CenterBox(props: CenterBoxProps) {
@@ -33,13 +36,17 @@ export function CenterBox(props: CenterBoxProps) {
                 <CenterBoxContent 
                     startingTopic={props.startingTopic} 
                     endingTopic={props.endingTopic}
+                    currentTopic={props.mostRecentTopic}
                     topicChain={props.currentCreateLinks} 
                     isExplorePage={false} 
                     searchLinks={false}
                     searchTopic={null}
+                    isAtGoal={props.isAtGoal}
                     exploreLinkList={props.listedLinks}
                     exploreChainList={props.listedChains}
                     setTopicsForChain={props.setTopicsForChain}
+                    submitCurrent={props.submitCurrent}
+                    setSearchTopic={props.setSearchTopic}
                 /> 
                 <CenterBoxFooter 
                     sendTopicToChat={props.sendTopicToChat}
@@ -55,13 +62,17 @@ export function CenterBox(props: CenterBoxProps) {
                 <CenterBoxContent 
                     startingTopic={props.startingTopic} 
                     endingTopic={props.endingTopic}
+                    currentTopic={props.mostRecentTopic}
                     topicChain={props.currentCreateLinks} 
                     isExplorePage={true} 
                     searchLinks={props.searchLinks}
                     searchTopic={props.searchTopic}
+                    isAtGoal={props.isAtGoal}
                     exploreLinkList={props.listedLinks}
                     exploreChainList={props.listedChains}
                     setTopicsForChain={props.setTopicsForChain}
+                    submitCurrent={props.submitCurrent}
+                    setSearchTopic={props.setSearchTopic}
                 /> </>
             )}
         </div>

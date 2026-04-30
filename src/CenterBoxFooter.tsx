@@ -20,7 +20,7 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
     const [hints, setHints] = useState<string[]>([]);
 
     const send = () => {
-        props.sendTopicToChat(inputText);
+        props.sendTopicToChat(normalizeString(inputText));
         setHints([]);
         setInputText("")
     }
@@ -40,9 +40,9 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
             throw new Error("Error with getting hints with ai");
         }
 
-        const dataArr = await resHinArr.json()
+        const dataArr: {hints: string[]} = await resHinArr.json()
 
-        setHints(dataArr.hints);
+        setHints(dataArr.hints.sort(() => Math.random() - 0.5));
     }
 
     useEffect(() => {
@@ -50,6 +50,13 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
             getHints(props.currentTopic)
         }
     }, [showHints])
+
+    const normalizeString =(s: string) => {
+        const trimmed = s.trim();
+        const reg = trimmed.replace(/[^a-zA-Z ]/g, "")
+        const formatted = reg.charAt(0).toUpperCase() + reg.slice(1).toLowerCase();
+        return formatted;
+    }
 
     return (
         <div className={`center-box-footer ${props.isSidebarOpen ? "sidebar-open" : ""}`}>
@@ -65,8 +72,8 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
                     disabled={props.blockUserInput}
                     className="chat-textbox" 
                     placeholder={`What does ${props.currentTopic.toLowerCase()} lead to?`}
-                    value={inputText}
-                    onChange={(e) => {setInputText(e.target.value)}}
+                    value={normalizeString(inputText)}
+                    onChange={(e) => {setInputText(normalizeString(e.target.value))}}
                     onKeyDown={(e) => {if (e.key === "Enter") send()}}
                 ></input>
                 <button 

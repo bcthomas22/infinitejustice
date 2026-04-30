@@ -1,11 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
+const normalizeString =(s) => {
+    const trimmed = s.trim();
+    const reg = trimmed.replace(/[^a-zA-Z ]/g, "")
+    const formatted = reg.charAt(0).toUpperCase() + reg.slice(1).toLowerCase();
+    return formatted;
+}
+
 router.post("/", async (req, res) => {
     try{
-
-        const topic = req.body.topic.trim();
-        const topicNormalized = topic.charAt(0).toUpperCase() + topic.slice(1);
+        const topicNormalized = normalizeString(req.body.topic)
 
         if (topicNormalized === ""){
             res.json({error: "no topic given"})

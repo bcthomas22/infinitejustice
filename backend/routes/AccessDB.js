@@ -2,6 +2,13 @@ const express = require("express");
 const pool = require("../db")
 const router = express.Router();
 
+const normalizeString =(s) => {
+    const trimmed = s.trim();
+    const reg = trimmed.replace(/[^a-zA-Z ]/g, "")
+    const formatted = reg.charAt(0).toUpperCase() + reg.slice(1).toLowerCase();
+    return formatted;
+}
+
 router.post("/addLink", async (req, res) => {
     const {topic1, topic2, rating, isHuman} = req.body;
 
@@ -11,7 +18,7 @@ router.post("/addLink", async (req, res) => {
         RETURNING *;
     `;
 
-    const values = [topic1, topic2, rating, isHuman];
+    const values = [normalizeString(topic1), normalizeString(topic2), rating, isHuman];
 
     try {
         const result = await pool.query(insertQuery, values);
@@ -35,7 +42,7 @@ router.post("/getLinks", async (req, res) => {
     `;
 
     try {
-        const result = await pool.query(selectQuery, [topic]);
+        const result = await pool.query(selectQuery, [normalizeString(topic)]);
         res.json(result.rows);
     } catch (err) {
         console.error("Database error:", err);
@@ -52,7 +59,7 @@ router.post("/addChain", async (req, res) => {
         RETURNING *;
     `;
 
-    const values = [topic1, topic2, topic_chain, rating];
+    const values = [normalizeString(topic1), normalizeString(topic2), rating, topic_chain];
 
     try {
         const result = await pool.query(insertQuery, values);
@@ -76,7 +83,7 @@ router.post("/getChains", async (req, res) => {
     `;
 
     try {
-        const result = await pool.query(selectQuery, [topic]);
+        const result = await pool.query(selectQuery, [normalizeString(topic)]);
         res.json(result.rows);
     } catch (err) {
         console.error("Database error:", err);

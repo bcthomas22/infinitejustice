@@ -12,6 +12,7 @@ type CenterBoxFooterProps = {
 
 const API_BASE = import.meta.env.VITE_API_URL;
 const MAX_HINTS = 3;
+const MAX_CHARS = 30;
 
 export function CenterBoxFooter(props: CenterBoxFooterProps) {
 
@@ -20,7 +21,7 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
     const [hints, setHints] = useState<string[]>([]);
 
     const send = () => {
-        props.sendTopicToChat(normalizeString(inputText));
+        props.sendTopicToChat(normalizeString(inputText).trim());
         setHints([]);
         setInputText("")
     }
@@ -52,10 +53,9 @@ export function CenterBoxFooter(props: CenterBoxFooterProps) {
     }, [showHints])
 
     const normalizeString =(s: string) => {
-        const trimmed = s.trim();
-        const reg = trimmed.replace(/[^a-zA-Z ]/g, "")
+        const reg = s.replace(/[^a-zA-Z ]/g, "")
         const formatted = reg.charAt(0).toUpperCase() + reg.slice(1).toLowerCase();
-        return formatted;
+        return formatted.slice(0, MAX_CHARS);
     }
 
     return (

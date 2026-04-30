@@ -163,8 +163,8 @@ body, html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-left: 10px solid #333;
-  background-color: #111;
+  border-left: 10px solid #444;
+  background-color: #090909;
 }
 
 .tabs button {
@@ -175,7 +175,6 @@ body, html {
   height: 100%;
   width: 100%;
   border-radius: 0 20px 20px 0;
-  border: none;
   outline: none;
   margin: 5px 0;
   color: #333;
@@ -189,8 +188,8 @@ body, html {
 }
 
 .tabs button.active {
-  background: #333;
-  color: white;
+  background: #444;
+  color: #eee;
 }
 
 .page-header {
@@ -263,8 +262,9 @@ body, html {
 }
 
 .center-box-content {
-  background-color: #222;
+  background-color: #111;
   height: calc(100vh - 185px);
+  background: linear-gradient(to right, #090909 0%, #111 10%, #111 90%, #090909 100%);
   width: 100%;
 }
 
@@ -273,7 +273,6 @@ body, html {
 }
 
 .chatbox {
-  background-color: #111;
   overflow-y: auto;
   border-radius: 10px;
   height: 100%;
@@ -737,7 +736,7 @@ body, html {
     height: 60px;
     flex-direction: row;
     border-left: none;
-    border-bottom: 10px solid #333;
+    border-bottom: 10px solid #444;
   }
 
   .tabs button {

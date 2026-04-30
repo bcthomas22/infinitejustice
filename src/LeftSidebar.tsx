@@ -49,13 +49,13 @@ export function LeftSidebar(props: LeftSidebarProps) {
 
                             <ProgressBar 
                                 label="Percent Complete" 
-                                displayValue={props.percentComplete ? `${props.percentComplete}%` : null} 
+                                displayValue={props.percentComplete !== null ? `${props.percentComplete}%` : null} 
                                 value={props.percentComplete ?? 0} 
                                 max={100} 
                             />
                             <ProgressBar 
                                 label="Average Rating" 
-                                displayValue={props.averageRating ? `${props.averageRating}` : null}
+                                displayValue={props.averageRating !== null ? `${props.averageRating}` : null}
                                 value={props.averageRating ?? 0} 
                                 max={100} 
                             />

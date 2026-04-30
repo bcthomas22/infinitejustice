@@ -17,8 +17,8 @@ export function CreatePage(props: CreatePageProps) {
     const [endingTopic, setEndingTopic] = useState<string | null>(null);
     const [currentLinks, setCurrentLinks] = useState<TopicLink[]>([]);
     const [mostRecentTopic, setMostRecentTopic] = useState<string | null>(null);
-    const [percentComplete, setPercentComplete] = useState<number | null>(0);
-    const [averageRating, setAverageRating] = useState<number | null>(0);
+    const [percentComplete, setPercentComplete] = useState<number | null>(null);
+    const [averageRating, setAverageRating] = useState<number | null>(null);
     const [blockUserInput, setBlockUserInput] = useState<boolean>(false);
     const [isAtGoal, setIsAtGoal] = useState<boolean>(false);
 
@@ -39,6 +39,8 @@ export function CreatePage(props: CreatePageProps) {
 
     const startGame = async () => {
         setBlockUserInput(true);
+        setAverageRating(null);
+        setPercentComplete(null);
         await getStartingEndingTopic();
         setCurrentLinks([]);
         setAverageRating(0);
@@ -188,6 +190,7 @@ export function CreatePage(props: CreatePageProps) {
 
 
     const getAverageRatingFromLinks = (topicLinks: TopicLink[]) => {
+        if(topicLinks.length === 0) return;
         const onlyRated = topicLinks.filter(l => l.isHuman && l.rating);
         
         const totalRating = onlyRated.reduce(((acc, x) => acc + (x.rating ?? 0)), 0)

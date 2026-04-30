@@ -83,7 +83,7 @@ export function ExplorePage(props: ExplorePageProps) {
             topic2: l,
             rating: undefined,
             isHuman: false
-        }));
+        })).filter(l => !databaseLinks.map(d => d.topic2).includes(l.topic2));
 
         const allLinks = [...databaseLinks, ...aiLinks, ...wikiLinks].slice(0, MAX_LINKS);
         setListedLinks(allLinks);
